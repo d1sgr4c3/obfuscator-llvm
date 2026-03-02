@@ -2,6 +2,7 @@
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Support/raw_ostream.h"
+#include "llvm/Transforms/Utils/Local.h"
 #include <sstream>
 
 namespace llvm {
@@ -50,7 +51,8 @@ void fixStack(Function *f) {
     }
 
     for (unsigned int i = 0; i != tmpPhi.size(); ++i) {
-      DemotePHIToStack(tmpPhi.at(i), f->begin()->getTerminator());
+      DemotePHIToStack(tmpPhi.at(i),
+                       f->begin()->getTerminator()->getIterator());
     }
 
   } while (tmpReg.size() != 0 || tmpPhi.size() != 0);

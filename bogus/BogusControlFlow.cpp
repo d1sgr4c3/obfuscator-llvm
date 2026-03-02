@@ -251,7 +251,7 @@ void BogusControlFlow::addBogusFlow(BasicBlock *basicBlock, Function &F) {
   // part, because they actually are updated in the second part according to
   // them.
   BasicBlock::iterator i1 = basicBlock->begin();
-  if (basicBlock->getFirstNonPHIOrDbgOrLifetime())
+  if (basicBlock->getFirstNonPHIOrDbgOrLifetime() != basicBlock->end())
     i1 = (BasicBlock::iterator)basicBlock->getFirstNonPHIOrDbgOrLifetime();
 
   /* TODO: find a real fix or try with the probe-stack inline-asm when its
@@ -308,12 +308,12 @@ void BogusControlFlow::addBogusFlow(BasicBlock *basicBlock, Function &F) {
   // The always true condition. End of the first block
   Twine *var4 = new Twine("condition");
   FCmpInst *condition =
-      new FCmpInst(*basicBlock, FCmpInst::FCMP_TRUE, LHS, RHS, *var4);
+      new FCmpInst(basicBlock->getTerminator()->getPrevNode(), FCmpInst::FCMP_TRUE, LHS, RHS, *var4);
   DEBUG_WITH_TYPE("gen", errs() << "bcf: Always true condition created\n");
 
   // Jump to the original basic block if the condition is true or
   // to the altered block if false.
-  BranchInst::Create(originalBB, alteredBB, (Value *)condition, basicBlock);
+  BranchInst::Create(originalBB, alteredBB, condition, basicBlock);
   DEBUG_WITH_TYPE(
       "gen",
       errs() << "bcf: Terminator instruction in first basic block: ok\n");
@@ -344,7 +344,7 @@ void BogusControlFlow::addBogusFlow(BasicBlock *basicBlock, Function &F) {
   // We add at the end a new always true condition
   Twine *var6 = new Twine("condition2");
   FCmpInst *condition2 =
-      new FCmpInst(*originalBB, CmpInst::FCMP_TRUE, LHS, RHS, *var6);
+      new FCmpInst(originalBB->getTerminator()->getPrevNode(), CmpInst::FCMP_TRUE, LHS, RHS, *var6);
   BranchInst::Create(originalBBpart2, alteredBB, (Value *)condition2,
                      originalBB);
   DEBUG_WITH_TYPE("gen", errs()
