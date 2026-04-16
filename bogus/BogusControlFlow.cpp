@@ -113,7 +113,7 @@ STATISTIC(FinalNumBasicBlocks,
           "f. Final number of basic blocks in this module");
 
 // Options for the pass
-const int defaultObfRate = 30, defaultObfTime = 1;
+const int defaultObfRate = 10, defaultObfTime = 10;
 
 static cl::opt<int>
     ObfProbRate("bcf_prob",

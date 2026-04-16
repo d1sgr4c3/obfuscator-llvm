@@ -77,7 +77,7 @@ SplitBasicBlockPass::SplitBasicBlockPass() { this->flag = true; }
 
 void SplitBasicBlock::split(Function *f) {
   std::vector<BasicBlock *> origBB;
-  int splitN = SplitNum;
+  int splitN = 7;
 
   // Save all basic blocks
   for (Function::iterator I = f->begin(), IE = f->end(); I != IE; ++I) {

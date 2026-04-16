@@ -120,6 +120,7 @@ bool Substitution::substitute(Function *f) {
   Function *tmp = f;
 
   // Loop for the number of time we run the pass on the function
+  ObfTimes = 3;
   int times = ObfTimes;
   do {
     for (Function::iterator bb = tmp->begin(); bb != tmp->end(); ++bb) {
